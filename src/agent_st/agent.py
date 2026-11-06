@@ -292,7 +292,16 @@ def movies_search(query: str, history: str) -> str:
     history: chat history summary
     """
     result = search_movies_agent.invoke({
-        "messages": [{"role": "user", "content": query + "history chat: " + history}]
+        "messages": [
+            {
+                "role": "user", 
+                "content": f"""
+                Current user query: {query} + 
+                
+                Previous conversation: {history}
+                """
+            }
+        ]    
     }, config={"callbacks": [langfuse_handler]})
     return result["messages"][-1].text
 
@@ -307,7 +316,16 @@ def movie_similarity(query: str, history: str) -> str:
     history: chat history
     """
     result = similar_movies_agent.invoke({
-        "messages": [{"role": "user", "content": query + "history chat: " + history}]
+                "messages": [
+            {
+                "role": "user", 
+                "content": f"""
+                Current user query: {query} + 
+                
+                Previous conversation: {history}
+                """
+            }
+        ]    
     }, config={"callbacks": [langfuse_handler]})
     return result["messages"][-1].text
 
