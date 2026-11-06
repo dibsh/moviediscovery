@@ -1,42 +1,45 @@
 import streamlit as st
-import requests
-import os
-from dotenv import load_dotenv
+from langchain_core.messages import ToolMessage
+from agent_st.agent import supervisor_agent as agent
+from langfuse.langchain import CallbackHandler
 
-load_dotenv()
-
-# Configuration
-API_URL = os.getenv("API_URL", "http://localhost:8080")
+langfuse_handler = CallbackHandler()
 
 def send_chat(question: str, history: str) -> dict:
-    try:
-        response = requests.post(
-            f"{API_URL}/chat",
-            json={
-                "query": question,
-                "history": history
-            }
-        )
-        response.raise_for_status()
-        data = response.json()
-        
-        # Map API response to simulation fields
-        return {
-            "answer": data["response"],
-            "total_input_tokens": data["input_tokens"],
-            "total_output_tokens": data["output_tokens"],
-            "tool_messages": data["tool_messages"],
-            "price": 17_000 * (data["input_tokens"] * 0.15 + data["output_tokens"] * 0.6) / 1_000_000
-        }
-    except Exception as e:
-        st.error(f"Error calling API: {str(e)}")
-        return {
-            "answer": "Sorry, I encountered an error connecting to the API.",
-            "total_input_tokens": 0,
-            "total_output_tokens": 0,
-            "tool_messages": [],
-            "price": 0
-        }
+    result = agent.invoke(
+        {"messages": history + [{"role": "user", "content": question}]},
+        config={"callbacks": [langfuse_handler]}
+    )
+    answer = result["messages"][-1].content
+
+    total_input_tokens = 0
+    total_output_tokens = 0
+
+    for message in result["messages"]:
+        if "usage_metadata" in message.response_metadata:
+            total_input_tokens += message.response_metadata["usage_metadata"]["input_tokens"]
+            total_output_tokens += message.response_metadata["usage_metadata"]["output_tokens"]
+        elif "token_usage" in message.response_metadata:
+            # Fallback for older or different structures
+            total_input_tokens += message.response_metadata["token_usage"].get("prompt_tokens", 0)
+            total_output_tokens += message.response_metadata["token_usage"].get("completion_tokens", 0)
+
+    price = 17_000*(total_input_tokens*0.15 + total_output_tokens*0.6)/1_000_000
+
+    tool_messages = []
+    for message in result["messages"]:
+        if isinstance(message, ToolMessage):
+            tool_message_content = message.content
+            tool_messages.append(tool_message_content)
+
+    response = {
+        "answer": answer,
+        "price": price,
+        "total_input_tokens": total_input_tokens,
+        "total_output_tokens": total_output_tokens,
+        "tool_messages": tool_messages
+    }
+    return response
 
 st.title("Chatbot HR ")
 

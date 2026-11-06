@@ -19,39 +19,76 @@ logging.info("Initializing Qdrant client...")
 qdrant_client = QdrantClient(
             url=os.getenv("QDRANT_URL"),
             api_key=os.getenv("QDRANT_API_KEY"),
+            timeout=100,  # Increase timeout here
+            prefer_grpc=False,  # Set to True if using gRPC port 6334
 )
         
 embeddings = OpenAIEmbeddings(
     model=os.getenv("EMBEDDING_MODEL"),
-    openai_api_key=os.getenv("OPENAI_API_KEY")
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url="https://openrouter.ai/api/v1",
 )
 
-def load_data(excel_path: str, limit=1) -> list[Document]:
-    logging.info(f"Loading data from {excel_path} with limit {limit}...")
-    df = pd.read_excel(excel_path)
+def load_data(csv_path: str, limit=1) -> list[Document]:
+    logging.info(f"Loading data from {csv_path} with limit {limit}...")
+    df = pd.read_csv(csv_path)
     df = df.head(limit)
 
     documents = []
-    
+
     for idx, row in df.iterrows():
-        content = str(row.get('Resume_str', ''))
+        # 1. Combine selected columns for embedding
+        content = "\n".join(
+            f"{col}: {row.get(col, '')}"
+            for col in [
+                'Series_Title',
+                'Released_Year',
+                'Genre',
+                'Runtime',
+                'Overview',
+                'Star1',
+                'Star2',
+                'Star3',
+                'Star4',
+                'Director'
+            ]
+            if pd.notna(row.get(col))
+            and str(row.get(col)).strip()
+        )
+
         if not content.strip():
             continue
 
+        # 2. Combine actors into a list
+        cast = [
+            str(row.get(col)).strip()
+            for col in ['Star1', 'Star2', 'Star3', 'Star4']
+            if pd.notna(row.get(col))
+            and str(row.get(col)).strip()
+        ]
+
+        # 3. Create document with metadata
         doc = Document(
             page_content=content,
             metadata={
-                'category': str(row.get('Category', 'Unknown')),
-                'row_index': idx,
-                'source': 'dataset.xlsx'
-            }
+                'title': str(row.get('Series_Title', 'Unknown')),
+                'released_year': str(row.get('Released_Year', 'Unknown')),
+                'runtime': str(row.get('Runtime', 'Unknown')),
+                'genre': str(row.get('Genre', 'Unknown')),
+                'imdb_rating': float(row.get('IMDB_Rating', 0) or 0),
+                'cast': cast,
+                'director': str(row.get('Director', 'Unknown')),
+                'gross': str(row.get('Gross', 'Unknown')),
+                'row_index': int(idx),
+                'source': 'imdb_top_1000.csv'
+                }
         )
         documents.append(doc)
     logging.info(f"Loaded {len(documents)} documents.")
     return documents
 
 def main():
-    documents = load_data('dataset/dataset.xlsx', limit=100)
+    documents = load_data('dataset/imdb_top_1000.csv', limit=1000)
 
     collections = qdrant_client.get_collections().collections
     collection_names = [col.name for col in collections]
