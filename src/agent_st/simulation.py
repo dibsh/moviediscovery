@@ -124,19 +124,6 @@ else:
     # Get chat history for selected feature
     messages = st.session_state.chat_history[feature]
 
-
-# Initialise chat history
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = {
-        "Discover Movies": [],
-        "Find Similar Movies": [],
-        "Hall of Fame": [],
-        "CineGuide": []
-    }
-
-# Get history for selected feature
-messages = st.session_state.chat_history[feature]
-
 # ----------------------------------
 # CHAT INTERFACE AND USER INPUT
 # ----------------------------------
@@ -146,7 +133,7 @@ for message in messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# User Input
+# Chat Input Placeholder
 if feature == "Discover Movies":
     placeholder = "Describe the type of movie you're looking for..."
 
@@ -159,6 +146,7 @@ elif feature == "Hall of Fame":
 else:
     placeholder = "Ask CineGuide anything about movies..."
 
+# User Input
 if prompt := st.chat_input(placeholder):
 
     # Build conversation history
