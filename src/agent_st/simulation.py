@@ -16,69 +16,69 @@ langfuse_handler = CallbackHandler()
 # CONFIGURATIONS
 # ----------------------------------
 
-# Page configuration
+
+# ----------------------------------
+# PAGE CONFIGURATION
+# ----------------------------------
+
+import streamlit as st
+
 st.set_page_config(
     page_title="CineMind",
     page_icon="🎬",
     layout="wide"
 )
 
-# Custom styling
+# ----------------------------------
+# CUSTOM STYLING
+# ----------------------------------
+
 st.markdown("""
 <style>
 
 /* Overall page */
 .stApp {
     background-color: #111315;
+    color: #FFFFFF;
 }
 
-/* Main content spacing */
+/* Main content */
 .block-container {
-    padding-top: 2.5rem;
+    padding-top: 2rem;
     padding-bottom: 3rem;
     max-width: 1200px;
 }
 
-/* Home screen feature cards */
-.st-key-feature-discover div[data-testid="stButton"] button,
-.st-key-feature-similar div[data-testid="stButton"] button,
-.st-key-feature-hall div[data-testid="stButton"] button,
-.st-key-feature-guide div[data-testid="stButton"] button {
+/* Headings */
+h1, h2, h3 {
+    color: #FFFFFF !important;
+}
 
-    height: 155px;
+/* Feature buttons */
+div[data-testid="stButton"] button {
+    min-height: 135px;
     width: 100%;
     white-space: pre-wrap;
     text-align: left;
     padding: 20px;
-
     background-color: #222426;
     color: #FFFFFF;
-
     border: 1px solid #393939;
     border-radius: 14px;
-
     font-size: 16px;
     font-weight: 600;
-
     transition: all 0.2s ease;
 }
 
-/* Hover effect */
-.st-key-feature-discover div[data-testid="stButton"] button:hover,
-.st-key-feature-similar div[data-testid="stButton"] button:hover,
-.st-key-feature-hall div[data-testid="stButton"] button:hover,
-.st-key-feature-guide div[data-testid="stButton"] button:hover {
-
-    border: 1px solid #D6AE68;
+/* Button hover */
+div[data-testid="stButton"] button:hover {
     background-color: #2B2C2D;
-    transform: translateY(-3px);
+    border-color: #D6AE68;
+    color: #FFFFFF;
 }
 
-/* Remove default focus border */
-.st-key-feature-discover div[data-testid="stButton"] button:focus,
-.st-key-feature-similar div[data-testid="stButton"] button:focus,
-.st-key-feature-hall div[data-testid="stButton"] button:focus,
-.st-key-feature-guide div[data-testid="stButton"] button:focus {
+/* Button focus */
+div[data-testid="stButton"] button:focus {
     border-color: #D6AE68;
     color: #FFFFFF;
 }
@@ -86,11 +86,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ----------------------------------
-# HOME PAGE AND FEATURE SELECTION
-# ----------------------------------
 
-# Initialise Session State
+# SESSION STATE
+
 if "feature" not in st.session_state:
     st.session_state.feature = None
 
@@ -102,108 +100,101 @@ if "chat_history" not in st.session_state:
         "CineGuide": []
     }
 
-# Home Screen
+
+# Configure home screen
+
 if st.session_state.feature is None:
 
-    # Header
-    st.markdown("""
-    <div style="margin-bottom: 35px;">
+    st.markdown(
+        "<p style='color:#D6AE68; font-size:13px; "
+        "font-weight:600; letter-spacing:3px;'>"
+        "YOUR PERSONAL CINEMA COMPANION</p>",
+        unsafe_allow_html=True
+    )
 
-        <div style="
-            color: #D6AE68;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            margin-bottom: 12px;
-        ">
-            YOUR PERSONAL CINEMA COMPANION
-        </div>
+    st.title("🎬 CineMind")
 
-        <h1 style="
-            font-size: 42px;
-            color: #FFFFFF;
-            margin-bottom: 10px;
-        ">
-            🎬 CineMind
-        </h1>
+    st.markdown(
+        "<p style='color:#AAAAAA; font-size:17px;'>"
+        "Find your next favourite movie. "
+        "Discover films, explore stories and celebrate cinema."
+        "</p>",
+        unsafe_allow_html=True
+    )
 
-        <p style="
-            font-size: 17px;
-            color: #AAAAAA;
-        ">
-            Find your next favourite movie.
-            Discover films, explore stories and celebrate cinema.
-        </p>
+    st.write("")
+    st.subheader("Explore CineMind: Think Less, Watch Better.")
+    st.write("Choose a feature to get started.")
 
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <h3 style="color: #FFFFFF; margin-bottom: 18px;">
-        Explore CineMind
-    </h3>
-    """, unsafe_allow_html=True)
-
-    # Feature cards
     col1, col2 = st.columns(2, gap="large")
 
     with col1:
 
-        with st.container(key="feature-discover"):
-            if st.button(
-                "🎞️  Discover Movies\n\n"
-                "Find films that match your mood, "
-                "interests and preferences.",
-                use_container_width=True
-            ):
-                st.session_state.feature = "Discover Movies"
-                st.rerun()
+        if st.button(
+            "🎞️  Discover Movies\n\n"
+            "Find films that match your mood, interests and preferences.",
+            use_container_width=True
+        ):
+            st.session_state.feature = "Discover Movies"
+            st.rerun()
 
-        with st.container(key="feature-hall"):
-            if st.button(
-                "🏆  Hall of Fame\n\n"
-                "Explore the highest-rated movies "
-                "of actors and directors.",
-                use_container_width=True
-            ):
-                st.session_state.feature = "Hall of Fame"
-                st.rerun()
+        if st.button(
+            "🏆  Hall of Fame\n\n"
+            "Explore the highest-rated movies of actors and directors.",
+            use_container_width=True
+        ):
+            st.session_state.feature = "Hall of Fame"
+            st.rerun()
 
     with col2:
 
-        with st.container(key="feature-similar"):
-            if st.button(
-                "🍿  Find Similar Movies\n\n"
-                "Discover movies similar to "
-                "your favourites.",
-                use_container_width=True
-            ):
-                st.session_state.feature = "Find Similar Movies"
-                st.rerun()
+        if st.button(
+            "🍿  Find Similar Movies\n\n"
+            "Discover movies similar to your favourites.",
+            use_container_width=True
+        ):
+            st.session_state.feature = "Find Similar Movies"
+            st.rerun()
 
-        with st.container(key="feature-guide"):
-            if st.button(
-                "✨  CineGuide\n\n"
-                "Your AI-powered companion "
-                "for all things cinema.",
-                use_container_width=True
-            ):
-                st.session_state.feature = "CineGuide"
-                st.rerun()
+        if st.button(
+            "✨  CineGuide\n\n"
+            "Your AI-powered companion for all things cinema.",
+            use_container_width=True
+        ):
+            st.session_state.feature = "CineGuide"
+            st.rerun()
 
-    # Footer
-    st.markdown("""
-    <div style="
-        text-align: center;
-        color: #777777;
-        font-size: 12px;
-        letter-spacing: 2px;
-        margin-top: 50px;
-    ">
-        CINEMIND · DISCOVER MORE THAN JUST MOVIES
-    </div>
-    """, unsafe_allow_html=True)
+    st.write("")
 
+    st.markdown(
+        "<p style='text-align:center; color:#777777; "
+        "font-size:12px; letter-spacing:2px; margin-top:35px;'>"
+        "CINEMIND · DISCOVER MORE THAN JUST MOVIES"
+        "</p>",
+        unsafe_allow_html=True
+    )
+
+# CHAT SCREEN
+
+else:
+
+    feature = st.session_state.feature
+
+    col1, col2 = st.columns([5, 1])
+
+    with col1:
+        if st.button("← Back to Home"):
+            st.session_state.feature = None
+            st.rerun()
+
+    with col2:
+        if st.button("🗑️ Clear Chat"):
+            st.session_state.chat_history[feature] = []
+            st.rerun()
+
+    st.title(f"🎬 {feature}")
+
+    messages = st.session_state.chat_history[feature]
 
 # Display once a feature is chosen
 
