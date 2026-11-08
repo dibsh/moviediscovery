@@ -128,116 +128,116 @@ else:
 # CHAT INTERFACE AND USER INPUT
 # ----------------------------------
 
-# Display chat messages from history on app rerun
-for message in messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    # Display chat messages from history on app rerun
+    for message in messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-# Chat Input Placeholder
-if feature == "Discover Movies":
-    placeholder = "Describe the type of movie you're looking for..."
+    # Chat Input Placeholder
+    if feature == "Discover Movies":
+        placeholder = "Describe the type of movie you're looking for..."
 
-elif feature == "Find Similar Movies":
-    placeholder = "Enter a movie title to find similar movies..."
+    elif feature == "Find Similar Movies":
+        placeholder = "Enter a movie title to find similar movies..."
 
-elif feature == "Hall of Fame":
-    placeholder = "Enter an actor or director's name to find our their top ranked work..."
+    elif feature == "Hall of Fame":
+        placeholder = "Enter an actor or director's name to find our their top ranked work..."
 
-else:
-    placeholder = "Ask CineGuide anything about movies..."
+    else:
+        placeholder = "Ask CineGuide anything about movies..."
 
-# User Input
-if prompt := st.chat_input(placeholder):
+    # User Input
+    if prompt := st.chat_input(placeholder):
 
-    # Build conversation history
-    history = "\n".join(
-        f'{message["role"]}: {message["content"]}'
-        for message in messages
-    )
-    
-    # Display user message
-    messages.append({
-        "role": "user",
-        "content": prompt
-    })
+        # Build conversation history
+        history = "\n".join(
+            f'{message["role"]}: {message["content"]}'
+            for message in messages
+        )
+        
+        # Display user message
+        messages.append({
+            "role": "user",
+            "content": prompt
+        })
 
-    with st.chat_message("user"):
-        st.markdown(prompt)
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-# Run selected agent
-    with st.chat_message("assistant"):
+        # Run selected agent
+        with st.chat_message("assistant"):
 
-            with st.spinner("CineMind is thinking..."):
+                with st.spinner("CineMind is thinking..."):
 
-                # Reset token usage for this request
-                reset_usage_tracking()
+                    # Reset token usage for this request
+                    reset_usage_tracking()
 
-                if feature == "Discover Movies":
-                    response = movies_search.invoke({
-                        "query": prompt,
-                        "history": history
-                    })
+                    if feature == "Discover Movies":
+                        response = movies_search.invoke({
+                            "query": prompt,
+                            "history": history
+                        })
 
-                elif feature == "Find Similar Movies":
-                    response = movie_similarity.invoke({
-                        "query": prompt,
-                        "history": history
-                    })
+                    elif feature == "Find Similar Movies":
+                        response = movie_similarity.invoke({
+                            "query": prompt,
+                            "history": history
+                        })
 
-                elif feature == "Hall of Fame":
-                    response = hall_of_fame.invoke({
-                        "query": prompt,
-                        "history": history
-                    })
+                    elif feature == "Hall of Fame":
+                        response = hall_of_fame.invoke({
+                            "query": prompt,
+                            "history": history
+                        })
 
-                else:
-                    response = cineguide(prompt, history)
-
-                # Get complete usage summary
-                usage = get_usage_summary()
-
-                # Display response
-                st.markdown(response)
-
-                # Display Tool Usage
-                with st.expander("🛠️ Tools Used"):
-                    if usage["tools_used"]:
-                        for tool in usage["tools_used"]:
-                            st.markdown(f"**{tool['name']}**")
-                            st.json(tool["args"])
                     else:
-                        st.caption("CineMind answered without using any tools.")
+                        response = cineguide(prompt, history)
 
-                # Display Token Usage
-                with st.expander("📊 Usage Details"):
+                    # Get complete usage summary
+                    usage = get_usage_summary()
 
-                    st.write(
-                        f"Input tokens: "
-                        f"{usage['total_input_tokens']:,}"
-                    )
+                    # Display response
+                    st.markdown(response)
 
-                    st.write(
-                        f"Output tokens: "
-                        f"{usage['total_output_tokens']:,}"
-                    )
+                    # Display Tool Usage
+                    with st.expander("🛠️ Tools Used"):
+                        if usage["tools_used"]:
+                            for tool in usage["tools_used"]:
+                                st.markdown(f"**{tool['name']}**")
+                                st.json(tool["args"])
+                        else:
+                            st.caption("CineMind answered without using any tools.")
 
-                    st.write(
-                        f"Total tokens: "
-                        f"{usage['total_tokens']:,}"
-                    )
+                    # Display Token Usage
+                    with st.expander("📊 Usage Details"):
 
-                    st.divider()
+                        st.write(
+                            f"Input tokens: "
+                            f"{usage['total_input_tokens']:,}"
+                        )
 
-                    st.write(
-                        f"Estimated cost: Rp {usage['price']:,.2f}"
-                    )
+                        st.write(
+                            f"Output tokens: "
+                            f"{usage['total_output_tokens']:,}"
+                        )
 
-                # Display previous conversation
-                with st.expander("**History Chat:**"):
-                    if history:
-                        st.code(history)
-                    else:
-                        st.write("No previous conversation.")
+                        st.write(
+                            f"Total tokens: "
+                            f"{usage['total_tokens']:,}"
+                        )
+
+                        st.divider()
+
+                        st.write(
+                            f"Estimated cost: Rp {usage['price']:,.2f}"
+                        )
+
+                    # Display previous conversation
+                    with st.expander("**History Chat:**"):
+                        if history:
+                            st.code(history)
+                        else:
+                            st.write("No previous conversation.")
 
     # Save assistant response
     messages.append({
