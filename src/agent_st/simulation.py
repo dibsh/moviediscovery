@@ -283,22 +283,8 @@ else:
         })
 
         with st.chat_message("user"):
-            st.markdown(
-                f"""
-                <div style="
-                    background-color: #F5F0E7;
-                    border: 1px solid #E8E0D2;
-                    border-radius: 12px;
-                    padding: 12px 16px;
-                    margin-bottom: 8px;
-                    color: #292929;
-                ">
-                    {message["content"]}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            
+            st.markdown(prompt)
+
         # Run selected agent
         with st.chat_message("assistant"):
 
