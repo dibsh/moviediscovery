@@ -12,6 +12,9 @@ from langfuse.langchain import CallbackHandler
 
 langfuse_handler = CallbackHandler()
 
+
+import streamlit as st
+
 # ----------------------------------
 # PAGE CONFIGURATION
 # ----------------------------------
@@ -22,63 +25,86 @@ st.set_page_config(
     layout="wide"
 )
 
-# ----------------------------------
 # CUSTOM STYLING
-# ----------------------------------
 
 st.markdown("""
 <style>
 
-/* Overall page */
+/* Overall background */
 .stApp {
-    background-color: #111315;
-    color: #FFFFFF;
+    background-color: #F2F2F0;
+    color: #292929;
 }
 
-/* Main content */
+/* Main content spacing */
 .block-container {
-    padding-top: 2rem;
+    padding-top: 3rem;
     padding-bottom: 3rem;
-    max-width: 1200px;
+    max-width: 1150px;
 }
 
-/* Headings */
+/* Main headings */
 h1, h2, h3 {
-    color: #FFFFFF !important;
+    color: #292929 !important;
 }
 
-/* Feature buttons */
+/* Body text */
+p {
+    color: #626262;
+}
+
+/* Feature cards */
 div[data-testid="stButton"] button {
-    min-height: 135px;
+    min-height: 145px;
     width: 100%;
     white-space: pre-wrap;
     text-align: left;
-    padding: 20px;
-    background-color: #222426;
-    color: #FFFFFF;
-    border: 1px solid #393939;
-    border-radius: 14px;
+    padding: 22px;
+
+    background-color: #FFFFFF;
+    color: #333333;
+
+    border: 1px solid #E1E0DC;
+    border-radius: 16px;
+
     font-size: 16px;
     font-weight: 600;
+
+    box-shadow: 0 3px 10px rgba(0,0,0,0.035);
     transition: all 0.2s ease;
 }
 
-/* Button hover */
+/* Hover effect */
 div[data-testid="stButton"] button:hover {
-    background-color: #2B2C2D;
-    border-color: #D6AE68;
-    color: #FFFFFF;
+    background-color: #FAF7F0;
+    border: 1px solid #B99558;
+    color: #292929;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
 }
 
 /* Button focus */
 div[data-testid="stButton"] button:focus {
-    border-color: #D6AE68;
-    color: #FFFFFF;
+    border-color: #B99558;
+    color: #292929;
+}
+
+/* Chat input */
+div[data-testid="stChatInput"] {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+}
+
+/* Footer */
+.cinemind-footer {
+    text-align: center;
+    color: #999999;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-top: 55px;
 }
 
 </style>
 """, unsafe_allow_html=True)
-
 
 # SESSION STATE
 
@@ -94,31 +120,59 @@ if "chat_history" not in st.session_state:
     }
 
 
-# Configure home screen
+# HOME SCREEN
 
 if st.session_state.feature is None:
 
+    # Header
     st.markdown(
-        "<p style='color:#D6AE68; font-size:13px; "
-        "font-weight:600; letter-spacing:3px;'>"
-        "YOUR PERSONAL CINEMA COMPANION</p>",
+        """
+        <p style="
+            color: #B99558;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        ">
+            YOUR PERSONAL CINEMA COMPANION
+        </p>
+        """,
         unsafe_allow_html=True
     )
 
     st.title("🎬 CineMind")
 
     st.markdown(
-        "<p style='color:#AAAAAA; font-size:17px;'>"
-        "Find your next favourite movie. "
-        "Discover films, explore stories and celebrate cinema."
-        "</p>",
+        """
+        <p style="
+            color: #686868;
+            font-size: 18px;
+            margin-top: -8px;
+        ">
+            Think less. Watch better.
+        </p>
+
+        <p style="
+            color: #888888;
+            font-size: 15px;
+        ">
+            Your AI-powered movie discovery companion.
+            Find your next favourite movie.
+        </p>
+        """,
         unsafe_allow_html=True
     )
 
     st.write("")
-    st.subheader("Explore CineMind: Think Less, Watch Better.")
-    st.write("Choose a feature to get started.")
+    st.write("")
 
+    st.subheader("Explore CineMind")
+
+    st.caption("Choose a feature to get started.")
+
+    st.write("")
+
+    # Feature cards
     col1, col2 = st.columns(2, gap="large")
 
     with col1:
@@ -157,13 +211,13 @@ if st.session_state.feature is None:
             st.session_state.feature = "CineGuide"
             st.rerun()
 
-    st.write("")
-
+    # Footer
     st.markdown(
-        "<p style='text-align:center; color:#777777; "
-        "font-size:12px; letter-spacing:2px; margin-top:35px;'>"
-        "CINEMIND · DISCOVER MORE THAN JUST MOVIES"
-        "</p>",
+        """
+        <div class="cinemind-footer">
+            CINEMIND · DISCOVER MORE THAN JUST MOVIES
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
