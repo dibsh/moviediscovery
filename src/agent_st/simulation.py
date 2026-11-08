@@ -26,13 +26,63 @@ st.set_page_config(
 # Custom styling
 st.markdown("""
 <style>
-div.stButton > button {
-    height: 130px;
+
+/* Overall page */
+.stApp {
+    background-color: #111315;
+}
+
+/* Main content spacing */
+.block-container {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+    max-width: 1200px;
+}
+
+/* Home screen feature cards */
+.st-key-feature-discover div[data-testid="stButton"] button,
+.st-key-feature-similar div[data-testid="stButton"] button,
+.st-key-feature-hall div[data-testid="stButton"] button,
+.st-key-feature-guide div[data-testid="stButton"] button {
+
+    height: 155px;
+    width: 100%;
     white-space: pre-wrap;
     text-align: left;
-    padding: 15px;
-    border-radius: 12px;
+    padding: 20px;
+
+    background-color: #222426;
+    color: #FFFFFF;
+
+    border: 1px solid #393939;
+    border-radius: 14px;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
 }
+
+/* Hover effect */
+.st-key-feature-discover div[data-testid="stButton"] button:hover,
+.st-key-feature-similar div[data-testid="stButton"] button:hover,
+.st-key-feature-hall div[data-testid="stButton"] button:hover,
+.st-key-feature-guide div[data-testid="stButton"] button:hover {
+
+    border: 1px solid #D6AE68;
+    background-color: #2B2C2D;
+    transform: translateY(-3px);
+}
+
+/* Remove default focus border */
+.st-key-feature-discover div[data-testid="stButton"] button:focus,
+.st-key-feature-similar div[data-testid="stButton"] button:focus,
+.st-key-feature-hall div[data-testid="stButton"] button:focus,
+.st-key-feature-guide div[data-testid="stButton"] button:focus {
+    border-color: #D6AE68;
+    color: #FFFFFF;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -55,49 +105,104 @@ if "chat_history" not in st.session_state:
 # Home Screen
 if st.session_state.feature is None:
 
-    st.title("🎬 CineMind")
-    st.subheader("Think less. Watch better.")
-    st.write(
-        "Your AI-powered movie discovery companion."
-        "Choose your feature to get started!"
-        )
+    # Header
+    st.markdown("""
+    <div style="margin-bottom: 35px;">
 
-    st.write("")
+        <div style="
+            color: #D6AE68;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        ">
+            YOUR PERSONAL CINEMA COMPANION
+        </div>
+
+        <h1 style="
+            font-size: 42px;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        ">
+            🎬 CineMind
+        </h1>
+
+        <p style="
+            font-size: 17px;
+            color: #AAAAAA;
+        ">
+            Find your next favourite movie.
+            Discover films, explore stories and celebrate cinema.
+        </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <h3 style="color: #FFFFFF; margin-bottom: 18px;">
+        Explore CineMind
+    </h3>
+    """, unsafe_allow_html=True)
 
     # Feature cards
     col1, col2 = st.columns(2, gap="large")
 
     with col1:
 
-        if st.button(
-            "🔎 Discover Movies\n\nFind movies based on your preferences.",
-            use_container_width=True
-        ):
-            st.session_state.feature = "Discover Movies"
-            st.rerun()
+        with st.container(key="feature-discover"):
+            if st.button(
+                "🎞️  Discover Movies\n\n"
+                "Find films that match your mood, "
+                "interests and preferences.",
+                use_container_width=True
+            ):
+                st.session_state.feature = "Discover Movies"
+                st.rerun()
 
-        if st.button(
-            "🏆 Hall of Fame\n\nExplore actors and directors and their highest-rated movies.",
-            use_container_width=True
-        ):
-            st.session_state.feature = "Hall of Fame"
-            st.rerun()
+        with st.container(key="feature-hall"):
+            if st.button(
+                "🏆  Hall of Fame\n\n"
+                "Explore the highest-rated movies "
+                "of actors and directors.",
+                use_container_width=True
+            ):
+                st.session_state.feature = "Hall of Fame"
+                st.rerun()
 
     with col2:
 
-        if st.button(
-            "🍿 Find Similar Movies\n\nDiscover movies similar to your favourites.",
-            use_container_width=True
-        ):
-            st.session_state.feature = "Find Similar Movies"
-            st.rerun()
+        with st.container(key="feature-similar"):
+            if st.button(
+                "🍿  Find Similar Movies\n\n"
+                "Discover movies similar to "
+                "your favourites.",
+                use_container_width=True
+            ):
+                st.session_state.feature = "Find Similar Movies"
+                st.rerun()
 
-        if st.button(
-            "✨ CineGuide\n\nYour AI-powered movie companion for all things cinema.",
-            use_container_width=True
-        ):
-            st.session_state.feature = "CineGuide"
-            st.rerun()
+        with st.container(key="feature-guide"):
+            if st.button(
+                "✨  CineGuide\n\n"
+                "Your AI-powered companion "
+                "for all things cinema.",
+                use_container_width=True
+            ):
+                st.session_state.feature = "CineGuide"
+                st.rerun()
+
+    # Footer
+    st.markdown("""
+    <div style="
+        text-align: center;
+        color: #777777;
+        font-size: 12px;
+        letter-spacing: 2px;
+        margin-top: 50px;
+    ">
+        CINEMIND · DISCOVER MORE THAN JUST MOVIES
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # Display once a feature is chosen
