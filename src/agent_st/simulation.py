@@ -103,28 +103,6 @@ div[data-testid="stChatInput"] {
     margin-top: 55px;
 }
 
-/* User chat message */
-div[data-testid="stChatMessage"]:has(
-    div[data-testid="chatAvatarIcon-user"]
-) {
-    background-color: #F5F0E7;
-    border: 1px solid #E8E0D2;
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 12px;
-}
-
-/* Assistant chat message */
-div[data-testid="stChatMessage"]:has(
-    div[data-testid="chatAvatarIcon-assistant"]
-) {
-    background-color: #FFFFFF;
-    border: 1px solid #E1E0DC;
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 12px;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -305,8 +283,22 @@ else:
         })
 
         with st.chat_message("user"):
-            st.markdown(prompt)
-
+            st.markdown(
+                f"""
+                <div style="
+                    background-color: #F5F0E7;
+                    border: 1px solid #E8E0D2;
+                    border-radius: 12px;
+                    padding: 12px 16px;
+                    margin-bottom: 8px;
+                    color: #292929;
+                ">
+                    {message["content"]}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            
         # Run selected agent
         with st.chat_message("assistant"):
 
