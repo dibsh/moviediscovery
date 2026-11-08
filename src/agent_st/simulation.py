@@ -251,8 +251,32 @@ else:
 
     # Display chat messages from history on app rerun
     for message in messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+
+        if message["role"] == "user":
+
+            with st.chat_message("user", avatar="👤"):
+                st.markdown(
+                    f"""
+                    <div style="
+                        background-color: #E5D9C4;
+                        padding: 14px 18px;
+                        border-radius: 16px;
+                        color: #292929;
+                        margin-left: auto;
+                        max-width: 85%;
+                    ">
+                        {message["content"]}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+        else:
+
+            with st.chat_message("assistant", avatar="🎬"):
+                st.markdown(
+                    message["content"]
+                )
 
     # Chat Input Placeholder
     if feature == "Discover Movies":
