@@ -239,8 +239,8 @@ else:
                         else:
                             st.write("No previous conversation.")
 
-    # Save assistant response
-    messages.append({
-        "role": "assistant",
-        "content": response
-    })
+        # Save assistant response
+        messages.append({
+            "role": "assistant",
+            "content": response
+        })
