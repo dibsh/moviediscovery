@@ -13,15 +13,8 @@ from langfuse.langchain import CallbackHandler
 langfuse_handler = CallbackHandler()
 
 # ----------------------------------
-# CONFIGURATIONS
-# ----------------------------------
-
-
-# ----------------------------------
 # PAGE CONFIGURATION
 # ----------------------------------
-
-import streamlit as st
 
 st.set_page_config(
     page_title="CineMind",
@@ -173,28 +166,6 @@ if st.session_state.feature is None:
         "</p>",
         unsafe_allow_html=True
     )
-
-# CHAT SCREEN
-
-else:
-
-    feature = st.session_state.feature
-
-    col1, col2 = st.columns([5, 1])
-
-    with col1:
-        if st.button("← Back to Home"):
-            st.session_state.feature = None
-            st.rerun()
-
-    with col2:
-        if st.button("🗑️ Clear Chat"):
-            st.session_state.chat_history[feature] = []
-            st.rerun()
-
-    st.title(f"🎬 {feature}")
-
-    messages = st.session_state.chat_history[feature]
 
 # Display once a feature is chosen
 
