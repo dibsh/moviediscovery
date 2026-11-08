@@ -103,6 +103,28 @@ div[data-testid="stChatInput"] {
     margin-top: 55px;
 }
 
+/* User chat message */
+div[data-testid="stChatMessage"]:has(
+    div[data-testid="chatAvatarIcon-user"]
+) {
+    background-color: #F5F0E7;
+    border: 1px solid #E8E0D2;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+/* Assistant chat message */
+div[data-testid="stChatMessage"]:has(
+    div[data-testid="chatAvatarIcon-assistant"]
+) {
+    background-color: #FFFFFF;
+    border: 1px solid #E1E0DC;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -251,32 +273,8 @@ else:
 
     # Display chat messages from history on app rerun
     for message in messages:
-
-        if message["role"] == "user":
-
-            with st.chat_message("user", avatar="👤"):
-                st.markdown(
-                    f"""
-                    <div style="
-                        background-color: #E5D9C4;
-                        padding: 14px 18px;
-                        border-radius: 16px;
-                        color: #292929;
-                        margin-left: auto;
-                        max-width: 85%;
-                    ">
-                        {message["content"]}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-        else:
-
-            with st.chat_message("assistant", avatar="🎬"):
-                st.markdown(
-                    message["content"]
-                )
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
     # Chat Input Placeholder
     if feature == "Discover Movies":
