@@ -27,16 +27,6 @@ Movie Discovery and Recommendation App, Cinemind. Integrated with Langfuse and S
 ```bash
 poetry run streamlit run src/agent_st/simulation.py
 ```
-## API Usage
-
-Example `POST` request to `/chat`:
-
-```json
-{
-  "query": "find HR managers",
-  "history": ""
-}
-```
 
 ## Contoh query
 
