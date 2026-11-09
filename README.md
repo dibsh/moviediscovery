@@ -1,10 +1,10 @@
-# AGENT HR
+# CINEMIND APP
 
-Resume Search Agent with FastAPI and Docker.
+Movie Discovery and Recommendation App, Cinemind. Integrated with Langfuse and Streamlit.
 
 ## Flow
 
-![Flow diagram agent](flow.png)
+![Flow diagram agent][flow.png]
 
 ## Local Installation
 
@@ -27,25 +27,6 @@ Resume Search Agent with FastAPI and Docker.
 ```bash
 poetry run streamlit run src/agent_st/simulation.py
 ```
-
-### FastAPI Server
-```bash
-poetry run python src/agent_st/server.py
-```
-The API will be available at `http://localhost:8000`. You can visit `http://localhost:8000/docs` for the interactive API documentation.
-
-## Running with Docker
-
-1. Build the Docker image:
-   ```bash
-   docker build -t agent-resume .
-   ```
-
-2. Run the container:
-   ```bash
-   docker run -p 8000:8000 --env-file .env agent-resume
-   ```
-
 ## API Usage
 
 Example `POST` request to `/chat`:
@@ -59,7 +40,9 @@ Example `POST` request to `/chat`:
 
 ## Contoh query
 
-1. `find HR managers`
-2. `Cari kandidat untuk posisi HR Manager`
-3. `Kandidat di Jakarta area`
-4. `Bandingkan technical capabilities dari top 3 candidates`
+1. For Feature 1 (Discover Movies): `A lone astronaut standing on a massive water planet with towering tidal waves under a swirling, hyper-realistic black hole gargantua.`
+2. For Feature 2 (Find Similar Movies): `Can you recommend movies similar to Inception?`
+3. For Feature 3: (Hall of Fame): `List film terbaik Bong Joon Ho`
+4. For Feature 4 (Cineguide): `Find Christopher Nolan's highest-rated movies and then recommend some movies similar to Interstellar`
+
+[flow.png]: flow.png
