@@ -24,9 +24,8 @@ Movie Discovery and Recommendation App, Cinemind. Integrated with Langfuse and S
 ## Running Locally
 
 ### Streamlit Simulation
-```bash
+
 Streamlit link: [Cinemind Website](https://moviediscovery-cinemind.streamlit.app/#cine-mind)
-```
 
 ## Contoh query
 
