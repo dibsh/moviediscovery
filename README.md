@@ -25,7 +25,7 @@ Movie Discovery and Recommendation App, Cinemind. Integrated with Langfuse and S
 
 ### Streamlit Simulation
 ```bash
-poetry run streamlit run src/agent_st/simulation.py
+Streamlit link: https://moviediscovery-cinemind.streamlit.app/#cine-mind
 ```
 
 ## Contoh query
