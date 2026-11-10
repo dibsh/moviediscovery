@@ -25,7 +25,7 @@ Movie Discovery and Recommendation App, Cinemind. Integrated with Langfuse and S
 
 ### Streamlit Simulation
 ```bash
-Streamlit link: https://moviediscovery-cinemind.streamlit.app/#cine-mind
+Streamlit link: [Cinemind Website](https://moviediscovery-cinemind.streamlit.app/#cine-mind)
 ```
 
 ## Contoh query
